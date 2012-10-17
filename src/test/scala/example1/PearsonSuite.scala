@@ -30,6 +30,7 @@ class PearsonSuite extends FunSuite {
   }
 
   test("get recommendations") {
-    getRecommendations(critics, "Toby").foreach(println)
+    assert(getRecommendations(critics, "Michael Phillips")(0)._1 == "Just My Luck")
+    assert(getRecommendations(critics, "Toby")(0)._1 == "The Night Listener")
   }
 }

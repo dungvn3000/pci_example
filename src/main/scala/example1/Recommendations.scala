@@ -92,7 +92,7 @@ object Recommendations {
           prefs(person2).keys.foreach(item => {
             if (prefs(person1).get(item).isEmpty || prefs(person1)(item) == 0) {
               if (!totals.isDefinedAt(item)) totals += item -> 0
-              totals(item) += prefs(person2)(item)
+              totals(item) += prefs(person2)(item) * sim
 
               if (!simSums.isDefinedAt(item)) simSums += item -> 0
               simSums(item) += sim
@@ -103,9 +103,9 @@ object Recommendations {
     })
 
     val rankings = new ListBuffer[(String, Double)]
-    totals.foreach(entry => {
-      val score = entry._2 / simSums(entry._1)
-      rankings += entry._1 -> score
+    totals.foreach(item => {
+      val score = item._2 / simSums(item._1)
+      rankings += item._1 -> score
     })
 
     rankings.sortWith(_._2 > _._2)
