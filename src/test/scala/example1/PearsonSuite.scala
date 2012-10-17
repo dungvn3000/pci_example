@@ -28,4 +28,8 @@ class PearsonSuite extends FunSuite {
     assert(topMatches(critics,"Michael Phillips")(0)._1 == "Claudia Puig")
     assert(topMatches(critics,"Michael Phillips")(0)._2 == 1)
   }
+
+  test("get recommendations") {
+    getRecommendations(critics, "Toby").foreach(println)
+  }
 }
