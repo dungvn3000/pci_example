@@ -1,4 +1,4 @@
 pci_example
 ===========
 
-Scala Implement  flowing example in Programming Collective Intelligence book.
+Scala Implement  flowing example1 in Programming Collective Intelligence book.
