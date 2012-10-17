@@ -16,15 +16,16 @@ class PearsonSuite extends FunSuite {
 
   test("caculate pearson correlation score") {
     val result1 = sim_pearson(critics, "Lisa Rose", "Gene Seymour")
-    assert(truncateAt(result1, 3) == 0.396)
+    assert(result1 == 0.396)
 
     val result2 = sim_pearson(critics, "Lisa Rose", "Toby")
-    assert(truncateAt(result2, 3) == 0.991)
+    assert(result2 == 0.991)
   }
 
-
-  def truncateAt(n: Double, p: Int): Double = {
-    val s = pow(10, p)
-    floor(n * s) / s
+  test("top matchers") {
+    assert(topMatches(critics,"Toby")(0)._1 == "Lisa Rose")
+    assert(topMatches(critics,"Toby")(0)._2 == 0.991)
+    assert(topMatches(critics,"Michael Phillips")(0)._1 == "Claudia Puig")
+    assert(topMatches(critics,"Michael Phillips")(0)._2 == 1)
   }
 }

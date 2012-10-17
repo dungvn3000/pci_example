@@ -64,7 +64,26 @@ object Recommendations {
     val den = sqrt((sum1Sq - pow(sum1, 2) / n) * (sum2Sq - pow(sum2, 2) / n))
     if (den == 0) return 0
 
-    num / den
+    truncateAt(num / den, 3)
   }
 
+  def topMatches(prefs: Map[String, Map[String, Double]], person1: String) = {
+    val scores = new ListBuffer[(String, Double)]
+    prefs.keys.foreach(person2 => {
+      if (person2 != person1) {
+        val result = sim_pearson(prefs, person1, person2)
+        scores += ((person2, result))
+      }
+    })
+
+    scores.sortWith(_._2 > _._2)
+  }
+
+
+
+
+  def truncateAt(n: Double, p: Int): Double = {
+    val s = pow(10, p)
+    floor(n * s) / s
+  }
 }
