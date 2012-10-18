@@ -1,4 +1,4 @@
-package example1
+package chapter1
 
 import collection.mutable.ListBuffer
 import math._
@@ -109,6 +109,12 @@ object Recommendations {
     })
 
     rankings.sortWith(_._2 > _._2)
+  }
+
+  def transformPrefs(prefs: Map[String, Map[String, Double]]) = {
+    val items = prefs.flatMap(_._2)
+    items.flatMap(item => Map(item._1 -> (
+      for (person <- prefs.keys if (prefs(person).isDefinedAt(item._1))) yield person -> prefs(person)(item._1)).toMap))
   }
 
   def truncateAt(n: Double, p: Int): Double = {

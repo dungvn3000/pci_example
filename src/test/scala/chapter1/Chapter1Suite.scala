@@ -1,4 +1,4 @@
-package example1
+package chapter1
 
 import org.scalatest.FunSuite
 import DataSet._
@@ -6,13 +6,13 @@ import Recommendations._
 import math._
 
 /**
- * The Class PearsonSuite.
+ * The Class Chapter1Suite.
  *
  * @author Nguyen Duc Dung
  * @since 10/17/12 3:40 PM
  *
  */
-class PearsonSuite extends FunSuite {
+class Chapter1Suite extends FunSuite {
 
   test("caculate pearson correlation score") {
     val result1 = sim_pearson(critics, "Lisa Rose", "Gene Seymour")
@@ -32,5 +32,11 @@ class PearsonSuite extends FunSuite {
   test("get recommendations") {
     assert(getRecommendations(critics, "Michael Phillips")(0)._1 == "Just My Luck")
     assert(getRecommendations(critics, "Toby")(0)._1 == "The Night Listener")
+  }
+
+  test("top matcher for a movie") {
+    val flipCritics = transformPrefs(critics)
+    assert(topMatches(flipCritics, "Superman Returns").head._1 == "You, Me and Dupree")
+    assert(topMatches(flipCritics, "Superman Returns").head._2 == 0.657)
   }
 }
