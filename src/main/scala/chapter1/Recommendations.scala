@@ -22,43 +22,20 @@ object Recommendations {
    */
   def sim_pearson(prefs: Map[String, Map[String, Double]], person1: String, person2: String): Double = {
 
-    val si = new ListBuffer[String]
-
-    prefs(person1).foreach(pref => {
-      if (!prefs(person2).get(pref._1).isEmpty) si += pref._1
-    })
-
+    val si = for(item <- prefs(person1) if(prefs(person2).isDefinedAt(item._1))) yield item._1
     if (si.size == 0) return 0
-
     val n = si.size
 
     //Sums of all the preferences
-    var sum1 = 0.0
-    si.foreach(item => {
-      sum1 += prefs(person1)(item)
-    })
-
-    var sum2 = 0.0
-    si.foreach(item => {
-      sum2 += prefs(person2)(item)
-    })
+    val sum1 = si.map(prefs(person1)(_)).sum
+    val sum2 = si.map(prefs(person2)(_)).sum
 
     //Sums of the squares
-    var sum1Sq = 0.0
-    si.foreach(item => {
-      sum1Sq += pow(prefs(person1)(item), 2)
-    })
-
-    var sum2Sq = 0.0
-    si.foreach(item => {
-      sum2Sq += pow(prefs(person2)(item), 2)
-    })
+    val sum1Sq = si.map(item => pow(prefs(person1)(item), 2)).sum
+    val sum2Sq = si.map(item => pow(prefs(person2)(item), 2)).sum
 
     //Sum of the products
-    var pSum = 0.0
-    si.foreach(item => {
-      pSum += prefs(person1)(item) * prefs(person2)(item)
-    })
+    val pSum = si.map(item => prefs(person1)(item) * prefs(person2)(item)).sum
 
     //Calculate r (Pearson score)
     val num = pSum - (sum1 * sum2 / n)
@@ -69,14 +46,9 @@ object Recommendations {
   }
 
   def topMatches(prefs: Map[String, Map[String, Double]], person1: String) = {
-    val scores = new ListBuffer[(String, Double)]
-    prefs.keys.foreach(person2 => {
-      if (person2 != person1) {
-        val result = sim_pearson(prefs, person1, person2)
-        scores += ((person2, result))
-      }
-    })
-
+    val scores = for (person2 <- prefs.keys.toList if(person1 != person2)) yield {
+      person2 -> sim_pearson(prefs, person1, person2)
+    }
     scores.sortWith(_._2 > _._2)
   }
 
