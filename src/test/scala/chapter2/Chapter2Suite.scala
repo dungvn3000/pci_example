@@ -3,7 +3,6 @@ package chapter2
 import org.scalatest.FunSuite
 import DataSet._
 import Recommendations._
-import math._
 
 /**
  * The Class Chapter2Suite.
@@ -23,10 +22,10 @@ class Chapter2Suite extends FunSuite {
   }
 
   test("top matchers") {
-    assert(topMatches(critics,"Toby")(0)._1 == "Lisa Rose")
-    assert(topMatches(critics,"Toby")(0)._2 == 0.991)
-    assert(topMatches(critics,"Michael Phillips")(0)._1 == "Claudia Puig")
-    assert(topMatches(critics,"Michael Phillips")(0)._2 == 1)
+    assert(topMatches(critics, "Toby")(0)._1 == "Lisa Rose")
+    assert(topMatches(critics, "Toby")(0)._2 == 0.991)
+    assert(topMatches(critics, "Michael Phillips")(0)._1 == "Claudia Puig")
+    assert(topMatches(critics, "Michael Phillips")(0)._2 == 1)
   }
 
   test("get recommendations") {
@@ -40,7 +39,26 @@ class Chapter2Suite extends FunSuite {
     assert(topMatches(flipCritics, "Superman Returns").head._2 == 0.657)
   }
 
-  test("test real data set movielens 100k") {
-    loadMovieLens()("87").foreach(println)
+  test("test with real data uing user base recommendation") {
+    val prefs = loadMovieLens()
+    var time = System.currentTimeMillis()
+    getRecommendations(prefs, "87").take(10).foreach(println)
+
+    time = System.currentTimeMillis() - time
+
+    println("get recommendatons " + time + " ms")
+  }
+
+  test("test with real data using item base recommendation") {
+    var time = System.currentTimeMillis()
+    val prefs =loadMovieLens()
+    val itemsim = calculateSimilarItems(prefs)
+    time = System.currentTimeMillis() - time
+    println("builing dictionary " + time + " ms")
+
+    time = System.currentTimeMillis()
+    getRecommendedItems(prefs, itemsim, "87").take(10).foreach(println)
+    time = System.currentTimeMillis() - time
+    println("get recommendations " + time + " ms")
   }
 }

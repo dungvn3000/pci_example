@@ -110,6 +110,39 @@ object Recommendations {
     prefs.toMap
   }
 
+  def getRecommendedItems(prefs: Map[String, Map[String, Double]], itemMatch: Map[String, Map[String, Double]], user: String) = {
+    val userRatings = prefs(user)
+    val scores = new mutable.HashMap[String, Double]
+    val totalSim = new mutable.HashMap[String, Double]
+
+    for ((item, ratting) <- userRatings)
+      for ((item2, similarity) <- itemMatch(item) if !userRatings.isDefinedAt(item2) && similarity > 0) {
+        if (!scores.isDefinedAt(item2)) scores += item2 -> 0
+
+        //Weighted sum of rating times similarity
+        scores(item2) += similarity * ratting
+
+        if (!totalSim.isDefinedAt(item2)) totalSim += item2 -> 0
+        //Sum of all the similarities
+        totalSim(item2) += similarity
+      }
+    //Divide each total score by total weighting to get an average
+    val rankings = for ((item, score) <- scores) yield {
+      item -> score / totalSim(item)
+    }
+
+    rankings.toList.sortWith(_._2 > _._2)
+  }
+
+  def calculateSimilarItems(prefs: Map[String, Map[String, Double]]) = {
+    val itemPrefs = transformPrefs(prefs)
+    //Using scala parallel collection for speeding up.
+    val result = itemPrefs.par.map(pref => {
+      pref._1 -> topMatches(itemPrefs, pref._1).toMap
+    })
+    result.toList.toMap
+  }
+
   def truncateAt(n: Double, p: Int): Double = {
     val s = pow(10, p)
     floor(n * s) / s
