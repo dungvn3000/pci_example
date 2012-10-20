@@ -1,4 +1,4 @@
-package chapter1
+package chapter2
 
 import collection.mutable.ListBuffer
 import math._
@@ -22,7 +22,7 @@ object Recommendations {
    */
   def sim_pearson(prefs: Map[String, Map[String, Double]], person1: String, person2: String): Double = {
 
-    val si = for(item <- prefs(person1) if(prefs(person2).isDefinedAt(item._1))) yield item._1
+    val si = for (item <- prefs(person1) if (prefs(person2).isDefinedAt(item._1))) yield item._1
     if (si.size == 0) return 0
     val n = si.size
 
@@ -46,7 +46,7 @@ object Recommendations {
   }
 
   def topMatches(prefs: Map[String, Map[String, Double]], person1: String) = {
-    val scores = for (person2 <- prefs.keys.toList if(person1 != person2)) yield {
+    val scores = for (person2 <- prefs.keys.toList if (person1 != person2)) yield {
       person2 -> sim_pearson(prefs, person1, person2)
     }
     scores.sortWith(_._2 > _._2)
@@ -87,6 +87,27 @@ object Recommendations {
     val items = prefs.flatMap(_._2)
     items.flatMap(item => Map(item._1 -> (
       for (person <- prefs.keys if (prefs(person).isDefinedAt(item._1))) yield person -> prefs(person)(item._1)).toMap))
+  }
+
+  def loadMovieLens(path: String = "ml-100k") = {
+    val movies = io.Source.fromFile(path + "/u.item", "latin1").getLines().map(line => {
+      val data = line.split('|')
+      val id = data(0)
+      val title = data(1)
+      id -> title
+    }).toMap
+
+    val prefs = new mutable.HashMap[String, Map[String, Double]]()
+    io.Source.fromFile(path + "/u.data").getLines().foreach(line => {
+      val data = line.split('\t')
+      val user = data(0)
+      val moviesId = data(1)
+      val rating = data(2).toDouble
+      if (!prefs.isDefinedAt(user)) prefs += user -> Map(movies(moviesId) -> rating)
+      else prefs(user) += movies(moviesId) -> rating
+    })
+
+    prefs.toMap
   }
 
   def truncateAt(n: Double, p: Int): Double = {

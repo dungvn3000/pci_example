@@ -1,4 +1,4 @@
-package chapter1
+package chapter2
 
 import org.scalatest.FunSuite
 import DataSet._
@@ -6,13 +6,13 @@ import Recommendations._
 import math._
 
 /**
- * The Class Chapter1Suite.
+ * The Class Chapter2Suite.
  *
  * @author Nguyen Duc Dung
  * @since 10/17/12 3:40 PM
  *
  */
-class Chapter1Suite extends FunSuite {
+class Chapter2Suite extends FunSuite {
 
   test("caculate pearson correlation score") {
     val result1 = sim_pearson(critics, "Lisa Rose", "Gene Seymour")
@@ -38,5 +38,9 @@ class Chapter1Suite extends FunSuite {
     val flipCritics = transformPrefs(critics)
     assert(topMatches(flipCritics, "Superman Returns").head._1 == "You, Me and Dupree")
     assert(topMatches(flipCritics, "Superman Returns").head._2 == 0.657)
+  }
+
+  test("test real data set movielens 100k") {
+    loadMovieLens()("87").foreach(println)
   }
 }
