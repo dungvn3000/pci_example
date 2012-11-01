@@ -18,4 +18,8 @@ class Chapter3Suite extends FunSuite {
     printClust(clust(0), blogNames)
   }
 
+  test("kcluster") {
+    val (blogNames, words, data) = readFile()
+  }
+
 }

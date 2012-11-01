@@ -105,8 +105,8 @@ object Clusters {
     else println(labels(clust.id))
 
     //now print the right and left branches
-    if (!clust.left.isEmpty) printClust(clust.left.get, labels, n +1)
-    if (!clust.right.isEmpty) printClust(clust.right.get, labels, n +1)
+    if (!clust.left.isEmpty) printClust(clust.left.get, labels, n + 1)
+    if (!clust.right.isEmpty) printClust(clust.right.get, labels, n + 1)
   }
 
   def removeAt[A](n: Int, ls: List[A]) = ls.splitAt(n) match {

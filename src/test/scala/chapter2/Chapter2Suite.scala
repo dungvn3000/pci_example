@@ -61,4 +61,22 @@ class Chapter2Suite extends FunSuite {
     time = System.currentTimeMillis() - time
     println("get recommendations " + time + " ms")
   }
+
+  test("test with user click recommend") {
+    val result1 = sim_pearson(userClicks, "u1", "u2")
+    val result2 = sim_pearson(userClicks, "u1", "u3")
+    val result3 = sim_pearson(userClicks, "u1", "u4")
+    println(result1)
+    println(result2)
+    println(result3)
+
+    println()
+
+    val result4 = sim_distance(userClicks, "u1", "u2")
+    val result5 = sim_distance(userClicks, "u1", "u3")
+    val result6 = sim_distance(userClicks, "u1", "u4")
+    println(result4)
+    println(result5)
+    println(result6)
+  }
 }

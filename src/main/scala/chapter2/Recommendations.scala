@@ -14,6 +14,18 @@ import collection.mutable
 object Recommendations {
 
   /**
+   * Returns a distance-based similarity score for person1 and person2
+   */
+  def sim_distance(prefs: Map[String, Map[String, Double]], person1: String, person2: String): Double = {
+    val si = for (item <- prefs(person1) if (prefs(person2).isDefinedAt(item._1))) yield item._1
+    if (si.size == 0) return 0
+
+    val sum_of_squares = si.map(item => pow(prefs(person1)(item) - prefs(person2)(item), 2)).sum
+
+    1 / (1 + sum_of_squares)
+  }
+
+  /**
    * Returns the Pearson correlation coefficient for p1 and p2
    * @param prefs
    * @param person1
