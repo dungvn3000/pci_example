@@ -57,9 +57,10 @@ object Recommendations {
     truncateAt(num / den, 3)
   }
 
-  def topMatches(prefs: Map[String, Map[String, Double]], person1: String) = {
+  def topMatches(prefs: Map[String, Map[String, Double]], person1: String,
+                 distance:(Map[String, Map[String, Double]], String, String) => Double = sim_pearson) = {
     val scores = for (person2 <- prefs.keys.toList if (person1 != person2)) yield {
-      person2 -> sim_pearson(prefs, person1, person2)
+      person2 -> distance(prefs, person1, person2)
     }
     scores.sortWith(_._2 > _._2)
   }

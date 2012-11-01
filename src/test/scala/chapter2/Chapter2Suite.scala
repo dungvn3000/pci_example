@@ -78,5 +78,12 @@ class Chapter2Suite extends FunSuite {
     println(result4)
     println(result5)
     println(result6)
+
+    println()
+
+    val flipClicks = transformPrefs(userClicks)
+    topMatches(flipClicks, "l1", sim_distance).foreach(println)
+    println()
+    topMatches(flipClicks, "l1", sim_pearson).foreach(println)
   }
 }
